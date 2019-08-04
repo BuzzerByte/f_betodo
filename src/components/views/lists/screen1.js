@@ -15,18 +15,14 @@ import axios from 'axios';
 // import { cacheFonts } from '../../helpers/AssetsCaching';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
+const BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFkZTc0YTcyOGU5MzAzNDkxNGEwOTM5MDM5OTY1MTkyYTQ3MGIxZDkyMDdhZGNjMjIzZWFkMDIwNmE3NzVlMWY0NmMyOWU3ZDdkOGE3ZGM4In0.eyJhdWQiOiIxIiwianRpIjoiYWRlNzRhNzI4ZTkzMDM0OTE0YTA5MzkwMzk5NjUxOTJhNDcwYjFkOTIwN2FkY2MyMjNlYWQwMjA2YTc3NWUxZjQ2YzI5ZTdkN2Q4YTdkYzgiLCJpYXQiOjE1NjQ4MDkxOTUsIm5iZiI6MTU2NDgwOTE5NSwiZXhwIjoxNTk2NDMxNTk1LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.DNSG-ijl0Szk-0WQhf6CvUVydwe_oQputea8ivKiGauuipRTH9Y2B6SMv5yMVi5U1y941ygOaTkLG8oD73DWZK_M-xKyAO-B7kIbzQnOkX9N6vyAqprpUWMZ6GpULioThKPzMPWQzA1At9hIiNz_xIJwKl8Lpxg4HocV_XaIYYhhngCFHfunsuqwHoyNFTuH02CJJdwHRFk7ju6vNPM17cVuAtIFyaY0agzScDxZ-lye31KGELZo17I_2LITgyAK10UuZZvHaIF2-BofiJcnnbqzcaQH2dWOy61sT_herUTBTum9i6BhU9JHpbEHkauDyU5MtO_x37fidqQXf79_4SJ9A1K01tZrZfmzblM3uruuzYSkMr7s23qY_bi6F3ZRzY_R4Rcu5vKk5UsUrdhSh5P6j6UcHH5wI4pZ-ga115iP-okhN2SP3AcdUoZvFTNTB9ZzzBcQ3liCCoRlTR40zb4lZn2Y0mNGi1upNlvqZVD3UmlJ4Ji9uH3_YzReTigE5qd3CKVAa6CSKx7fGldJU-c3WPRQnWxJZx6Bfe6rJNoTmB56omdtU-h0V788VGwB_JJ7MkJdi9NsLqX7XNbiTkjZ0nGpq2u5wzkv3Fsj2gwkncuLLkfPhyA-oO2nxSSqyFZMa2_draJzF8TyQll4EZy76L_F-xMyls8wy7XCung";
 export default class ListsScreen1 extends Component {
   constructor(props) {
     super(props);
-    axios.defaults.headers.common = {
-      // 'X-CSRF-TOKEN': Laravel.csrfToken,
-      'X-Requested-With': 'XMLHttpRequest',
-      'Authorization': 'Bearer ' + this.getToken(),
-    };
 
     this.state = {
       fontLoaded: false,
+      //users: null,
     };
   }
   async getToken(){
@@ -43,15 +39,23 @@ export default class ListsScreen1 extends Component {
   }
   async componentDidMount() {
     
-    
-    axios.get('http://192.168.1.97/api/task').then((response) => {
-      console.log(response)
-    }).catch((error) => {
-      console.log(error)
+    this.getToken().then((data) => {
+      // console.log("Token: "+ data);
+      // console.log("Get:"+data);
+      const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
+      // console.log(AuthStr);
+      axios.get('http://192.168.1.97/api/task', { 
+        headers: { Authorization: AuthStr },
+      })
+      .then(response => {
+        // If request is good...
+        this.setState({ users: response.data });
+      })
+      .catch((error) => {
+        console.log('error ' + error);
+      });
     });
-    
     this.setState({ fontLoaded: true });
-    
   }
   
   renderValue(user) {
@@ -87,18 +91,18 @@ export default class ListsScreen1 extends Component {
     } else {
       return (
         <View
-          style={{
-            backgroundColor: 'rgba(244,230,224,1)',
-            width: 70,
-            height: 28,
-            borderRadius: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            marginLeft: 10,
-          }}
+          // style={{
+          //   backgroundColor: 'rgba(244,230,224,1)',
+          //   width: 70,
+          //   height: 28,
+          //   borderRadius: 5,
+          //   justifyContent: 'center',
+          //   alignItems: 'center',
+          //   flexDirection: 'row',
+          //   marginLeft: 10,
+          // }}
         >
-          <Icon name="md-arrow-dropdown" type="ionicon" color="red" size={25} />
+          {/* <Icon name="md-arrow-dropdown" type="ionicon" color="red" size={25} />
           <Text
             style={{
               color: 'red',
@@ -108,14 +112,15 @@ export default class ListsScreen1 extends Component {
             }}
           >
             {value}
-          </Text>
+          </Text> */}
         </View>
       );
     }
   }
 
   renderCard(user, index) {
-    const { name, avatar } = user;
+    // const { name, avatar } = user;
+    const {name , description } = user;
 
     return (
       <View
@@ -132,14 +137,14 @@ export default class ListsScreen1 extends Component {
       >
         <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ marginLeft: 15 }}>
-            <Avatar
+            {/* <Avatar
               small
               rounded
               source={{
                 uri: avatar,
               }}
               activeOpacity={0.7}
-            />
+            /> */}
           </View>
           <Text
             style={{
@@ -150,6 +155,16 @@ export default class ListsScreen1 extends Component {
             }}
           >
             {name}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'regular',
+              fontSize: 15,
+              marginLeft: 10,
+              color: 'gray',
+            }}
+          >
+            {description}
           </Text>
         </View>
         <View
@@ -171,7 +186,7 @@ export default class ListsScreen1 extends Component {
               marginHorizontal: 10,
             }}
           >
-            <Icon name="md-person-add" type="ionicon" color="gray" size={20} />
+            <Icon name="md-trash" type="ionicon" color="gray" size={20} />
           </View>
         </View>
       </View>
@@ -179,7 +194,7 @@ export default class ListsScreen1 extends Component {
   }
 
   renderListCards() {
-    return _.map(this.USERS, (user, index) => {
+    return _.map(this.state.users, (user, index) => {
       return this.renderCard(user, index);
     });
   }
@@ -196,120 +211,7 @@ export default class ListsScreen1 extends Component {
               <Text style={styles.nameHeader}>Tasks</Text>
             </View>
             <ScrollView style={{ flex: 1, marginBottom: 20 }}>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  backgroundColor: 'white',
-                  borderRadius: 5,
-                  alignItems: 'center',
-                  marginHorizontal: 10,
-                  height: 250,
-                  marginBottom: 10,
-                }}
-              >
-                <View style={{ flex: 3, flexDirection: 'row' }}>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Avatar
-                      width={145}
-                      height={145}
-                      source={{
-                        uri:
-                          'https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg',
-                      }}
-                      activeOpacity={0.7}
-                      avatarStyle={{ borderRadius: 145 / 2 }}
-                      overlayContainerStyle={{ backgroundColor: 'transparent' }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <View
-                      style={{
-                        flex: 1,
-                        marginTop: 10,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'bold',
-                          fontSize: 25,
-                          color: 'rgba(98,93,144,1)',
-                          marginLeft: -15,
-                        }}
-                      >
-                        Paul Allen
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    width: 300,
-                    borderWidth: 0.5,
-                    borderColor: 'rgba(222, 223, 226, 1)',
-                    marginHorizontal: 20,
-                    height: 1,
-                    marginVertical: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Button
-                      title="View Profile"
-                      buttonStyle={{
-                        height: 33,
-                        width: 120,
-                        backgroundColor: 'rgba(222, 223, 226, 1)',
-                        borderRadius: 5,
-                      }}
-                      titleStyle={{
-                        fontFamily: 'regular',
-                        fontSize: 13,
-                        color: 'gray',
-                      }}
-                      onPress={() => console.log('aye')}
-                      underlayColor="transparent"
-                    />
-                  </View>
-                  <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Button
-                      title="Add User"
-                      buttonStyle={{
-                        height: 33,
-                        width: 120,
-                        backgroundColor: 'rgba(113, 154, 112, 1)',
-                        borderRadius: 5,
-                      }}
-                      titleStyle={{
-                        fontFamily: 'regular',
-                        fontSize: 13,
-                        color: 'white',
-                      }}
-                      onPress={() => console.log('aye')}
-                      underlayColor="transparent"
-                    />
-                  </View>
-                </View>
-              </View>
+              
               {this.renderListCards()}
             </ScrollView>
           </SafeAreaView>

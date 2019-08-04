@@ -69,7 +69,7 @@ export default class LoginScreen2 extends Component {
     // this.getToken();
     // const token = await AsyncStorage.getItem('userData');
     let data = this.getToken().then((data) => {
-      console.log("Token: "+ data);
+      // console.log("Token: "+ data);
       this.setState({
         userData: data,
       })  
@@ -137,7 +137,9 @@ export default class LoginScreen2 extends Component {
       email: email,
       password: password,
     });
-    
+    if(user != null){
+      this.props.navigation.navigate('App');
+    }
     console.log(user.data.success.token);
    
     this.storeToken(JSON.stringify(user.data.success.token));
