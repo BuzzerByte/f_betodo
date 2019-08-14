@@ -4,8 +4,8 @@ import { Icon } from 'react-native-elements';
 
 import ButtonsTab from '../tabs/buttons';
 import ListsTab from '../tabs/lists';
-import InputTab from '../tabs/input';
-import FontsTab from '../tabs/fonts';
+// import InputTab from '../tabs/input';
+// import FontsTab from '../tabs/fonts';
 
 const Components = createBottomTabNavigator(
   {
@@ -34,36 +34,36 @@ const Components = createBottomTabNavigator(
         ),
       },
     },
-    InputTab: {
-      screen: InputTab,
-      path: '/input',
-      navigationOptions: {
-        tabBarLabel: 'Input',
-        tabBarIcon: ({ tintColor, focused }) => (
-          <Icon
-            name="wpforms"
-            size={30}
-            type="font-awesome"
-            color={tintColor}
-          />
-        ),
-      },
-    },
-    FontsTab: {
-      screen: FontsTab,
-      path: '/fonts',
-      navigationOptions: {
-        tabBarLabel: 'Fonts',
-        tabBarIcon: ({ tintColor, focused }) => (
-          <Icon
-            name={focused ? 'font' : 'font'}
-            size={30}
-            type="font-awesome"
-            color={tintColor}
-          />
-        ),
-      },
-    },
+    // InputTab: {
+    //   screen: InputTab,
+    //   path: '/input',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Input',
+    //     tabBarIcon: ({ tintColor, focused }) => (
+    //       <Icon
+    //         name="wpforms"
+    //         size={30}
+    //         type="font-awesome"
+    //         color={tintColor}
+    //       />
+    //     ),
+    //   },
+    // },
+    // FontsTab: {
+    //   screen: FontsTab,
+    //   path: '/fonts',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Fonts',
+    //     tabBarIcon: ({ tintColor, focused }) => (
+    //       <Icon
+    //         name={focused ? 'font' : 'font'}
+    //         size={30}
+    //         type="font-awesome"
+    //         color={tintColor}
+    //       />
+    //     ),
+    //   },
+    // },
   },
   {
     initialRouteName: 'ButtonsTab',
