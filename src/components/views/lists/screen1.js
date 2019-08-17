@@ -57,16 +57,14 @@ export default class ListsScreen1 extends Component {
       .then(response => {
         // If request is good...
         taskArray = response.data;
-
         //add a property onUpdate, and set that to false
         taskArray = taskArray.map((data)=>{
           var o = Object.assign({}, data);
           o.onUpdate = false;
-          return 0;
+          return o;
         });
         this.setState({ tasks: taskArray });
-        console.log("tasks"+ this.state.tasks);
-        console.log("taskArray" + taskArray);
+       
       })
       .catch((error) => {
         console.log('error ' + error);
@@ -77,12 +75,39 @@ export default class ListsScreen1 extends Component {
   }
 
   onSubmitNewTask(newTask){
-    console.log(newTask);
     const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
     axios.post('http://192.168.1.97/api/task', {
       name: newTask,
       lastName: ''
     },{
+      headers: { Authorization: AuthStr },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  onSubmitUpdateTask(updateTask, id){
+    const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
+    axios.put('http://192.168.1.97/api/task/'+id, {
+      name: updateTask,
+    },{
+      headers: { Authorization: AuthStr },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  onDeleteTask(id){
+    const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
+    axios.delete('http://192.168.1.97/api/task/'+id, {
       headers: { Authorization: AuthStr },
     })
     .then(function (response) {
@@ -107,7 +132,10 @@ export default class ListsScreen1 extends Component {
     var foundIndex = this.findTaskIndex(taskId);
     var newTasks = this.state.tasks;
     newTasks[foundIndex].onUpdate = !newTasks[foundIndex].onUpdate;
-    console.log("idx is "+ foundIndex);
+
+    this.setState({
+      tasks: newTasks
+    });
   }
 
   renderValue(task) {
@@ -198,7 +226,7 @@ export default class ListsScreen1 extends Component {
               activeOpacity={0.7}
             /> */}
           </View>
-          {this.state.onUpdate ? (
+          {task.onUpdate ? (
             <Input
               style={{
                 fontFamily: 'regular',
@@ -208,7 +236,7 @@ export default class ListsScreen1 extends Component {
               }}
               onChangeText={(updateTask) => this.setState({updateTask})}
               autoFocus
-              // onBlur={() => this.setState({ editable: false })}
+              //onBlur={() => this.toggleEditTask(task.id)}          
             >
               {name}
             </Input>
@@ -255,16 +283,22 @@ export default class ListsScreen1 extends Component {
               marginHorizontal: 10,
             }}
           >
-          {this.state.editable ? (
+          {task.onUpdate ? (
             <Icon
               name="plus"
               type="font-awesome"
               color="#86939e"
               size={20}
-              onPress={() => this.onSubmitNewTask(this.state.newTask)} 
+              onPress={() => this.onSubmitUpdateTask(this.state.updateTask, task.id)} 
             />
           ):(
-            <Icon name="md-trash" type="ionicon" color="gray" size={20}  />
+            <Icon 
+              name="md-trash" 
+              type="ionicon" 
+              color="gray" 
+              size={20}  
+              onPress={() => this.onDeleteTask(task.id)} 
+            />
           )}
             
           </View>
