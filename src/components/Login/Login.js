@@ -142,7 +142,7 @@ export default class LoginScreen2 extends Component {
     }
     console.log(user.data.success.token);
    
-    this.storeToken(JSON.stringify(user.data.success.token));
+    this.storeToken(user.data.success.token);
     setTimeout(() => {
       LayoutAnimation.easeInEaseOut();
       this.setState({

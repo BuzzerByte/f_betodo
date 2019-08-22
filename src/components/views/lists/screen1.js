@@ -16,13 +16,12 @@ import { TextInput } from 'react-native-gesture-handler';
 // import { cacheFonts } from '../../helpers/AssetsCaching';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImFkZTc0YTcyOGU5MzAzNDkxNGEwOTM5MDM5OTY1MTkyYTQ3MGIxZDkyMDdhZGNjMjIzZWFkMDIwNmE3NzVlMWY0NmMyOWU3ZDdkOGE3ZGM4In0.eyJhdWQiOiIxIiwianRpIjoiYWRlNzRhNzI4ZTkzMDM0OTE0YTA5MzkwMzk5NjUxOTJhNDcwYjFkOTIwN2FkY2MyMjNlYWQwMjA2YTc3NWUxZjQ2YzI5ZTdkN2Q4YTdkYzgiLCJpYXQiOjE1NjQ4MDkxOTUsIm5iZiI6MTU2NDgwOTE5NSwiZXhwIjoxNTk2NDMxNTk1LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.DNSG-ijl0Szk-0WQhf6CvUVydwe_oQputea8ivKiGauuipRTH9Y2B6SMv5yMVi5U1y941ygOaTkLG8oD73DWZK_M-xKyAO-B7kIbzQnOkX9N6vyAqprpUWMZ6GpULioThKPzMPWQzA1At9hIiNz_xIJwKl8Lpxg4HocV_XaIYYhhngCFHfunsuqwHoyNFTuH02CJJdwHRFk7ju6vNPM17cVuAtIFyaY0agzScDxZ-lye31KGELZo17I_2LITgyAK10UuZZvHaIF2-BofiJcnnbqzcaQH2dWOy61sT_herUTBTum9i6BhU9JHpbEHkauDyU5MtO_x37fidqQXf79_4SJ9A1K01tZrZfmzblM3uruuzYSkMr7s23qY_bi6F3ZRzY_R4Rcu5vKk5UsUrdhSh5P6j6UcHH5wI4pZ-ga115iP-okhN2SP3AcdUoZvFTNTB9ZzzBcQ3liCCoRlTR40zb4lZn2Y0mNGi1upNlvqZVD3UmlJ4Ji9uH3_YzReTigE5qd3CKVAa6CSKx7fGldJU-c3WPRQnWxJZx6Bfe6rJNoTmB56omdtU-h0V788VGwB_JJ7MkJdi9NsLqX7XNbiTkjZ0nGpq2u5wzkv3Fsj2gwkncuLLkfPhyA-oO2nxSSqyFZMa2_draJzF8TyQll4EZy76L_F-xMyls8wy7XCung";
-
+const BEARER_TOKEN = null;
 var taskArray = [];
 export default class ListsScreen1 extends Component {
   constructor(props) {
     super(props);
-
+    BEARER_TOKEN = this.getToken();
     this.state = {
       fontLoaded: false,
       newTask: '',
@@ -30,6 +29,7 @@ export default class ListsScreen1 extends Component {
       tasks: taskArray,
       updateTask: '',
     };
+    this.getAllTask = this.getAllTask.bind(this);
   }
 
   async getToken(){
@@ -44,12 +44,14 @@ export default class ListsScreen1 extends Component {
       console.log('Something went wrong', error);
     }
   }
+
   async componentDidMount() {
-    
     this.getToken().then((data) => {
-      // console.log("Token: "+ data);
+      console.log("Token: "+ BEARER_TOKEN);
+      // BEARER_TOKEN = data;
       // console.log("Get:"+data);
-      const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
+      const AuthStr = "Bearer ".concat(BEARER_TOKEN);
+
       // console.log(AuthStr);
       axios.get('http://192.168.1.97/api/task', { 
         headers: { Authorization: AuthStr },
@@ -74,8 +76,36 @@ export default class ListsScreen1 extends Component {
     this.setState({ fontLoaded: true });
   }
 
+  getAllTask(){
+    this.getToken().then((data) => {
+      // console.log("Token: "+ data);
+      // console.log("Get:"+data);
+      const AuthStr = 'Bearer '.concat(data); 
+      // console.log(AuthStr);
+      axios.get('http://192.168.1.97/api/task', { 
+        headers: { Authorization: AuthStr },
+      })
+      .then(response => {
+        // If request is good...
+        taskArray = response.data;
+        //add a property onUpdate, and set that to false
+        taskArray = taskArray.map((data)=>{
+          var o = Object.assign({}, data);
+          o.onUpdate = false;
+          return o;
+        });
+        this.setState({ tasks: taskArray });
+       
+      })
+      .catch((error) => {
+        console.log('error ' + error);
+      });
+    });
+  
+  }
+
   onSubmitNewTask(newTask){
-    const AuthStr = 'Bearer '.concat(BEARER_TOKEN); 
+    const AuthStr = 'Bearer '.concat(data); 
     axios.post('http://192.168.1.97/api/task', {
       name: newTask,
       lastName: ''
@@ -88,6 +118,7 @@ export default class ListsScreen1 extends Component {
     .catch(function (error) {
       console.log(error);
     });
+    this.getAllTask();
   }
 
   onSubmitUpdateTask(updateTask, id){
@@ -103,6 +134,7 @@ export default class ListsScreen1 extends Component {
     .catch(function (error) {
       console.log(error);
     });
+    this.getAllTask();
   }
 
   onDeleteTask(id){
@@ -116,6 +148,7 @@ export default class ListsScreen1 extends Component {
     .catch(function (error) {
       console.log(error);
     });
+    this.getAllTask();
   }
 
   findTaskIndex(taskId){
