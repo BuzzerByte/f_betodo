@@ -37,7 +37,7 @@ const App = () => {
       setReady(true);
     });
   });
-
+  
   const loading = (
     <View style={styles.container}>
       <ActivityIndicator />
@@ -53,16 +53,19 @@ const App = () => {
   return ready ? loaded : loading;
 
   // return (
-  //   <Fragment>
-  //     <StatusBar barStyle="dark-content" />
-  //     <SafeAreaView>
-  //       <ScrollView
-  //         contentInsetAdjustmentBehavior="automatic"
-  //         style={styles.scrollView}>
-  //         <Login />
-  //       </ScrollView>
-  //     </SafeAreaView>
-  //   </Fragment>
+  //    <Fragment>
+  //      <StatusBar barStyle="dark-content" />
+  //       <SafeAreaView>
+  //         <ScrollView
+  //          contentInsetAdjustmentBehavior="automatic"
+  //          style={styles.scrollView}>
+
+  //         <Provider store={store}>
+  //           <Navigation />
+  //         </Provider>
+  //        </ScrollView>
+  //      </SafeAreaView>
+  //    </Fragment>
   // );
 };
 
