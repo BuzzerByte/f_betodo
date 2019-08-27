@@ -19,15 +19,19 @@ import {
   Input
 } from 'react-native-elements';
 import axios from 'axios';
+import { connect, useSelector, useDispatch } from "react-redux";
+import { getUserToken } from "../../../actions/TokenAction";
 import {
   TextInput
 } from 'react-native-gesture-handler';
+import UserController from '../../../controllers/UserController';
+import TaskController from '../../../controllers/TaskController';
 // import { cacheFonts } from '../../helpers/AssetsCaching';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 // const BEARER_TOKEN = null;
 var taskArray = [];
-export default class ListsScreen1 extends Component {
+export default class Tasks extends Component {
   constructor(props) {
     super(props);
     BEARER_TOKEN = this.getToken();
@@ -42,26 +46,19 @@ export default class ListsScreen1 extends Component {
   }
 
   async getToken() {
-    try {
-      const userData = await AsyncStorage.getItem('userData', (err, value) => {
-        // console.log("Get Token: "+JSON.parse(value));
-      });
-
-      return userData;
-
-    } catch (error) {
-      console.log('Something went wrong', error);
-    }
+    const token = await UserController.getUserToken();
+    // console.log(token);
+    return token;
+    
   }
 
   async componentDidMount() {
     this.getToken().then((data) => {
-      console.log("Token: " + data);
-      // BEARER_TOKEN = data;
-      // console.log("Get:"+data);
+      
       const AuthStr = "Bearer ".concat(data);
-
-      // console.log(AuthStr);
+      TaskController.index(AuthStr).then((err, value)=>{
+        console.log(value);
+      });
       axios.get('http://192.168.1.97/api/task', {
           headers: {
             Authorization: AuthStr
@@ -89,14 +86,16 @@ export default class ListsScreen1 extends Component {
     this.setState({
       fontLoaded: true
     });
+    // this.removeItemValue('userData');
   }
-
+  
   getAllTask() {
     this.getToken().then((data) => {
       // console.log("Token: "+ data);
       // console.log("Get:"+data);
       const AuthStr = 'Bearer '.concat(data);
       // console.log(AuthStr);
+     
       axios.get('http://192.168.1.97/api/task', {
           headers: {
             Authorization: AuthStr
@@ -124,8 +123,9 @@ export default class ListsScreen1 extends Component {
   }
 
   onSubmitNewTask(newTask) {
-    const AuthStr = 'Bearer '.concat(data);
-    axios.post('http://192.168.1.97/api/task', {
+    this.getToken().then((data)=>{
+      const AuthStr = 'Bearer '.concat(data);
+      axios.post('http://192.168.1.97/api/task', {
         name: newTask,
         lastName: ''
       }, {
@@ -139,30 +139,34 @@ export default class ListsScreen1 extends Component {
       .catch(function (error) {
         console.log(error);
       });
+    });
     this.getAllTask();
   }
 
   onSubmitUpdateTask(updateTask, id) {
-    const AuthStr = 'Bearer '.concat(BEARER_TOKEN);
-    axios.put('http://192.168.1.97/api/task/' + id, {
-        name: updateTask,
-      }, {
-        headers: {
-          Authorization: AuthStr
-        },
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    this.getToken().then((data)=>{
+      const AuthStr = 'Bearer '.concat(data);
+      axios.put('http://192.168.1.97/api/task/' + id, {
+          name: updateTask,
+        }, {
+          headers: {
+            Authorization: AuthStr
+          },
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
     this.getAllTask();
   }
 
   onDeleteTask(id) {
-    const AuthStr = 'Bearer '.concat(BEARER_TOKEN);
-    axios.delete('http://192.168.1.97/api/task/' + id, {
+    this.getToken().then((data)=>{
+      const AuthStr = 'Bearer '.concat(data);
+      axios.delete('http://192.168.1.97/api/task/' + id, {
         headers: {
           Authorization: AuthStr
         },
@@ -173,6 +177,7 @@ export default class ListsScreen1 extends Component {
       .catch(function (error) {
         console.log(error);
       });
+    });
     this.getAllTask();
   }
 
@@ -305,9 +310,10 @@ export default class ListsScreen1 extends Component {
             }
           }
           onChangeText = {(updateTask) => this.setState({updateTask})}
-          autoFocus>
-          
-          {name}</Input>
+          autoFocus
+          onBlur = {() => this.onSubmitUpdateTask(this.state.updateTask, task.id)}
+        
+         > {name}</Input>
         ) : ( 
           <Text style = {
             {
@@ -393,7 +399,7 @@ render() {
           }}>
         <View style = {styles.statusBar}/> 
         <View style = {styles.navBar}>
-        <Text style = {styles.nameHeader}> Tasks </Text> 
+        {/* <Text style = {styles.nameHeader}> Tasks </Text>  */}
         </View> 
           <ScrollView style = {{
               flex: 1,
@@ -408,24 +414,25 @@ render() {
             marginBottom: 16
           }
         } >
-        <Input rightIcon = {
-          <Icon
-          name = "plus"
-          type = "font-awesome"
-          color = "#86939e"
-          size = {25}
-          onPress = {() => this.onSubmitNewTask(this.state.newTask)}
-          />
-        }
-        onChangeText = {(newTask) => this.setState({newTask})}
-        leftIconContainerStyle = {{
-            marginLeft: 0,
-            marginRight: 10
-        }}
-        containerStyle = {
-          styles.inputContainerStyle
-        }
-        placeholder = "New task" />
+        <Input 
+          rightIcon = {
+            <Icon
+            name = "plus"
+            type = "font-awesome"
+            color = "#86939e"
+            size = {25}
+            onPress = {() => this.onSubmitNewTask(this.state.newTask)}
+            />
+          }
+          onChangeText = {(newTask) => this.setState({newTask})}
+          leftIconContainerStyle = {{
+              marginLeft: 0,
+              marginRight: 10
+          }}
+          // containerStyle = {
+          //   styles.inputContainerStyle
+          // }
+          placeholder = "New task" />
         </View> 
         </SafeAreaView>
 

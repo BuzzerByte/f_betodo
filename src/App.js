@@ -24,7 +24,6 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import Login from './views/Auth/Login';
 import { store, persist } from './reducers';
 import { Provider } from 'react-redux';
 import Navigation from './components/navigation';

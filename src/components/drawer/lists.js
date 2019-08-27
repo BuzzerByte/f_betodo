@@ -2,15 +2,16 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import Lists from '../views/lists';
+// import Lists from '../views/lists';
+import TasksContainer from '../views/tasks';
 
 const ListsDrawerItem = createStackNavigator(
   {
     Playground: {
-      screen: Lists,
+      screen: TasksContainer,
 
       navigationOptions: ({ navigation }) => ({
-        title: 'Lists',
+        title: 'Todo Lists',
         headerLeft: (
           <Icon
             name="menu"
@@ -26,7 +27,7 @@ const ListsDrawerItem = createStackNavigator(
 );
 
 ListsDrawerItem.navigationOptions = {
-  drawerLabel: 'Lists',
+  drawerLabel: 'To-do',
   drawerIcon: ({ tintColor }) => (
     <Icon
       name="list"

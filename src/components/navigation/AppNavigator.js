@@ -97,10 +97,10 @@ const MainRoot = createDrawerNavigator(
       path: '/lists',
       screen: Lists,
     },
-    Components: {
-      path: '/components',
-      screen: Components,
-    },
+    // Components: {
+    //   path: '/components',
+    //   screen: Components,
+    // },
     // Ratings: {
     //   path: '/ratings',
     //   screen: Ratings,
@@ -115,7 +115,7 @@ const MainRoot = createDrawerNavigator(
     },
   },
   {
-    initialRouteName: 'Components',
+    initialRouteName: 'Lists',
     contentOptions: {
       activeTintColor: '#548ff7',
       activeBackgroundColor: 'transparent',

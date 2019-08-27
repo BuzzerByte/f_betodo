@@ -18,15 +18,15 @@ function AuthHandler(props) {
   // const user = useSelector(state => getUser(state));
 
   useEffect(() => {
-    AsyncStorage.getItem("userData", (err, value) => {
+    AsyncStorage.getItem("userToken", (err, value) => {
       const user = value;
-      console.log(user);
+      // console.log(value);
       if (user !== null) {
-        console.log("go to app" + user);
+        // console.log("go to app" + user);
         // AsyncStorage.removeItem("userData");
         props.navigation.navigate("App");
       } else {
-        console.log("got to auth");
+        // console.log("got to auth");
         props.navigation.navigate("Auth");
       }
     });

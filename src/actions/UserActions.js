@@ -25,6 +25,7 @@ const loginSuccess = user => ({
 const logoutRequest = () => ({
   type: actionTypes.LOGOUT,
 });
+
 export const signup = (email, password, c_password) => async(dispatch)=>{
   dispatch(loginRequest());
   try{
@@ -35,11 +36,14 @@ export const signup = (email, password, c_password) => async(dispatch)=>{
     dispatch(loginError(error));
   }
 };
-export const login = (email, password) => async (dispatch) => {
+
+export const login = (email, password) => async(dispatch) => {
   dispatch(loginRequest());
   try {
+    // console.log('in user action login');
     const user = await UserController.login(email, password);
-    console.log("login success");
+    // console.log(user);
+    return user;
     dispatch(loginSuccess(user));
   } catch (error) {
     dispatch(loginError(error.message));
