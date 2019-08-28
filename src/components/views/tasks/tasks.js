@@ -56,31 +56,19 @@ export default class Tasks extends Component {
     this.getToken().then((data) => {
       
       const AuthStr = "Bearer ".concat(data);
-      TaskController.index(AuthStr).then((err, value)=>{
-        console.log(value);
-      });
-      axios.get('http://192.168.1.97/api/task', {
-          headers: {
-            Authorization: AuthStr
-          },
-        })
-        .then(response => {
-          // If request is good...
-          taskArray = response.data;
-          //add a property onUpdate, and set that to false
-          taskArray = taskArray.map((data) => {
-            var o = Object.assign({}, data);
-            o.onUpdate = false;
-            return o;
-          });
-          this.setState({
-            tasks: taskArray
-          });
-
-        })
-        .catch((error) => {
-          console.log('error ' + error);
+      TaskController.index(AuthStr).then((response)=>{
+        // console.log(response);
+        taskArray = response.data;
+        //add a property onUpdate, and set that to false
+        taskArray = taskArray.map((data) => {
+          var o = Object.assign({}, data);
+          o.onUpdate = false;
+          return o;
         });
+        this.setState({
+          tasks: taskArray
+        });
+      });
     });
 
     this.setState({
@@ -91,33 +79,20 @@ export default class Tasks extends Component {
   
   getAllTask() {
     this.getToken().then((data) => {
-      // console.log("Token: "+ data);
-      // console.log("Get:"+data);
-      const AuthStr = 'Bearer '.concat(data);
-      // console.log(AuthStr);
-     
-      axios.get('http://192.168.1.97/api/task', {
-          headers: {
-            Authorization: AuthStr
-          },
-        })
-        .then(response => {
-          // If request is good...
-          taskArray = response.data;
-          //add a property onUpdate, and set that to false
-          taskArray = taskArray.map((data) => {
-            var o = Object.assign({}, data);
-            o.onUpdate = false;
-            return o;
-          });
-          this.setState({
-            tasks: taskArray
-          });
-
-        })
-        .catch((error) => {
-          console.log('error ' + error);
+      const AuthStr = "Bearer ".concat(data);
+      TaskController.index(AuthStr).then((response)=>{
+        // console.log(response);
+        taskArray = response.data;
+        //add a property onUpdate, and set that to false
+        taskArray = taskArray.map((data) => {
+          var o = Object.assign({}, data);
+          o.onUpdate = false;
+          return o;
         });
+        this.setState({
+          tasks: taskArray
+        });
+      });
     });
 
   }
@@ -125,19 +100,8 @@ export default class Tasks extends Component {
   onSubmitNewTask(newTask) {
     this.getToken().then((data)=>{
       const AuthStr = 'Bearer '.concat(data);
-      axios.post('http://192.168.1.97/api/task', {
-        name: newTask,
-        lastName: ''
-      }, {
-        headers: {
-          Authorization: AuthStr
-        },
-      })
-      .then(function (response) {
+      TaskController.store(AuthStr, newTask).then((response)=>{
         console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
     });
     this.getAllTask();
@@ -146,19 +110,9 @@ export default class Tasks extends Component {
   onSubmitUpdateTask(updateTask, id) {
     this.getToken().then((data)=>{
       const AuthStr = 'Bearer '.concat(data);
-      axios.put('http://192.168.1.97/api/task/' + id, {
-          name: updateTask,
-        }, {
-          headers: {
-            Authorization: AuthStr
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      TaskController.update(AuthStr, updateTask, id).then((response)=>{
+        console.log(response);
+      });
     });
     this.getAllTask();
   }
@@ -166,16 +120,8 @@ export default class Tasks extends Component {
   onDeleteTask(id) {
     this.getToken().then((data)=>{
       const AuthStr = 'Bearer '.concat(data);
-      axios.delete('http://192.168.1.97/api/task/' + id, {
-        headers: {
-          Authorization: AuthStr
-        },
-      })
-      .then(function (response) {
+      TaskController.delete(AuthStr, id).then((response)=>{
         console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
     });
     this.getAllTask();

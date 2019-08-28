@@ -11,29 +11,44 @@ class TaskController {
     }
 
     index = async (AuthStr) => {
-        axios.get('http://192.168.1.97/api/task', {
+        var data = await axios.get('http://192.168.1.97/api/task', {
             headers: {
                 Authorization: AuthStr
             },
-        })
-        .then(response => {
-            // // If request is good...
-            // taskArray = response.data;
-            // //add a property onUpdate, and set that to false
-            // taskArray = taskArray.map((data) => {
-            //     var o = Object.assign({}, data);
-            //     o.onUpdate = false;
-            //     return o;
-            // });
-            // this.setState({
-            //     tasks: taskArray
-            // });
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log('error ' + error);
-            
         });
+        return data;
+    }
+
+    store = async (AuthStr, newTask) => {
+      var data = await axios.post('http://192.168.1.97/api/task', {
+        name: newTask,
+        lastName: ''
+      }, {
+        headers: {
+          Authorization: AuthStr
+        },
+      });
+      return data;
+    }
+
+    update = async (AuthStr, updateTask, id) => {
+        var data = await axios.put('http://192.168.1.97/api/task/' + id, {
+            name: updateTask,
+        }, {
+            headers: {
+                Authorization: AuthStr
+            },
+        });
+        return data;
+    }
+
+    delete = async (AuthStr, id) => {
+        var data = await axios.delete('http://192.168.1.97/api/task/' + id, {
+            headers: {
+                Authorization: AuthStr
+            },
+        });
+        return data;
     }
 
     login = async (email, password) => {
