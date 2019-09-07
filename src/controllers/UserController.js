@@ -32,12 +32,11 @@ class UserController {
 
 
     saveUserToken = (data) => {
-      AsyncStorage.setItem('userToken', data);
+       AsyncStorage.setItem('userToken', data);
     }
 
     removeUserToken = () => {
-        AsyncStorage.removeItem('userToken');
-        
+      AsyncStorage.removeItem('userToken');  
     }
 
     login = async (email, password) => {
@@ -65,7 +64,11 @@ class UserController {
       return result;
     }
     
-    logout = () => null;
+    // logout = () => null;
+    logout = () => {
+      this.removeUserToken();
+      return true;
+    }
   }
   
   export default new UserController();
