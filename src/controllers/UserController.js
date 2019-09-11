@@ -4,9 +4,7 @@ import { AsyncStorage } from 'react-native';
 
 class UserController {
     constructor() {
-      this.basePath = '/users';
-      this.registerPath = '/register';
-      this.loginPath = '/login';
+      this.basePath = 'http://192.168.1.97/api';
     }
     // signup = async(email, password, c_password)=>{
     //   axios.post('http://192.168.1.97/api/register', {
@@ -40,7 +38,7 @@ class UserController {
     }
 
     login = async (email, password) => {
-      const result = await axios.post('http://192.168.1.97/api/login', {
+      const result = await axios.post(this.basePath + '/login', {
         email: email,
         password: password,
         // c_password: passwordConfirmation
@@ -48,9 +46,9 @@ class UserController {
       
       return result.data.success.token;
     }
-
+    
     signup = async(email, password, passwordConfirmation) => {
-      const result = await axios.post("http://192.168.1.97/api/register", {
+      const result = await axios.post(this.basePath + '/register', {
         email: email,
         password: password,
         c_password: passwordConfirmation

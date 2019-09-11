@@ -6,12 +6,11 @@ import {
 
 class TaskController {
     constructor() {
-        this.basePath = '/tasks';
-
+        this.basePath = 'http://192.168.1.97/api';
     }
 
     index = async (AuthStr) => {
-        var data = await axios.get('http://192.168.1.97/api/task', {
+        var data = await axios.get(this.basePath + '/task', {
             headers: {
                 Authorization: AuthStr
             },
@@ -20,7 +19,7 @@ class TaskController {
     }
 
     store = async (AuthStr, newTask) => {
-      var data = await axios.post('http://192.168.1.97/api/task', {
+      var data = await axios.post(this.basePath+'/task', {
         name: newTask,
         lastName: ''
       }, {
@@ -32,7 +31,7 @@ class TaskController {
     }
 
     update = async (AuthStr, updateTask, id) => {
-        var data = await axios.put('http://192.168.1.97/api/task/' + id, {
+        var data = await axios.put(this.basePath + '/task/' + id, {
             name: updateTask,
         }, {
             headers: {
@@ -43,7 +42,7 @@ class TaskController {
     }
 
     delete = async (AuthStr, id) => {
-        var data = await axios.delete('http://192.168.1.97/api/task/' + id, {
+        var data = await axios.delete(this.basePath + '/task/' + id, {
             headers: {
                 Authorization: AuthStr
             },
@@ -52,7 +51,7 @@ class TaskController {
     }
 
     login = async (email, password) => {
-        const result = await axios.post('http://192.168.1.97/api/login', {
+        const result = await axios.post(this.basePath + '/login', {
             email: email,
             password: password,
             // c_password: passwordConfirmation
@@ -62,7 +61,7 @@ class TaskController {
     }
 
     signup = async (email, password, passwordConfirmation) => {
-        const result = await axios.post("http://192.168.1.97/api/register", {
+        const result = await axios.post(this.basePath + '/register', {
                 email: email,
                 password: password,
                 c_password: passwordConfirmation
