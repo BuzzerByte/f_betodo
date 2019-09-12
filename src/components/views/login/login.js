@@ -140,7 +140,11 @@ export default class Login extends Component {
   signUp = async () => {
     const { email, password, passwordConfirmation } = this.state;
     this.setState({ isLoading: true });
-    UserController.signup(email, password, passwordConfirmation);
+    const token = await UserController.signup(email, password, passwordConfirmation);
+    if(token != null){
+      UserController.saveUserToken(token);
+      this.props.navigation.navigate("App");
+    }
     // Simulate an API call
     setTimeout(() => {
       LayoutAnimation.easeInEaseOut();
