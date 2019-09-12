@@ -52,14 +52,15 @@ class UserController {
         email: email,
         password: password,
         c_password: passwordConfirmation
-      })
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
       });
-      return result;
+      console.log(result);
+      // .then(function(response) {
+      //   console.log(response);
+      // })
+      // .catch(function(error) {
+      //   console.log(error);
+      // });
+      return result.data.success.token;
     }
     
     // logout = () => null;
