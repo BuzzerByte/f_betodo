@@ -27,11 +27,11 @@ import {
 import UserController from '../../../controllers/UserController';
 import TaskController from '../../../controllers/TaskController';
 // import { cacheFonts } from '../../helpers/AssetsCaching';
-
+import { showTask } from "../../../actions/TaskAction";
 const SCREEN_WIDTH = Dimensions.get('window').width;
 // const BEARER_TOKEN = null;
 var taskArray = [];
-export default class Tasks extends Component {
+class Tasks extends Component {
   constructor(props) {
     super(props);
     BEARER_TOKEN = this.getToken();
@@ -43,6 +43,7 @@ export default class Tasks extends Component {
       updateTask: '',
     };
     this.getAllTask = this.getAllTask.bind(this);
+
   }
 
   async getToken() {
@@ -53,6 +54,9 @@ export default class Tasks extends Component {
   }
 
   async componentDidMount() {
+    console.log(this.props.user.user)
+    await this.props.showTask('Bearer '+this.props.user.user);
+    console.log(this.props.task.task)
     this.getToken().then((data) => {
       
       const AuthStr = "Bearer ".concat(data);
@@ -390,6 +394,19 @@ render() {
   );
 }
 }
+const mapStateToProps = state => ({
+   user:state.user,
+   task:state.task,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addTask: (token, text) => dispatch(addTask(token, text)),
+  deleteTask: (token, id) => dispatch(deleteTasks(token, id)),
+  updateTask: (token, text, id) => dispatch(updateTask(token, text, id)),
+  showTask: (token) => dispatch(showTask(token))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
 
 const styles = StyleSheet.create({
   statusBar: {

@@ -6,7 +6,7 @@ import {
 
 class TaskController {
     constructor() {
-        this.basePath = 'http://178.128.125.2/api';
+        this.basePath = 'http://192.168.1.97/api';
     }
 
     index = async (AuthStr) => {
@@ -49,33 +49,6 @@ class TaskController {
         });
         return data;
     }
-
-    login = async (email, password) => {
-        const result = await axios.post(this.basePath + '/login', {
-            email: email,
-            password: password,
-            // c_password: passwordConfirmation
-        });
-
-        return result.data.success.token;
-    }
-
-    signup = async (email, password, passwordConfirmation) => {
-        const result = await axios.post(this.basePath + '/register', {
-                email: email,
-                password: password,
-                c_password: passwordConfirmation
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        return result;
-    }
-
-    logout = () => null;
 }
 
 export default new TaskController();

@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { useCallback, Fragment, Component } from "react";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -16,16 +16,15 @@ import {
 } from "react-native";
 // import AsyncStorage from '@react-native-community/async-storage';
 import { Input, Button, Icon } from "react-native-elements";
-import axios from "axios";
-// import { login } from "../../../actions/UserActions";
-// import { connect, useSelector, useDispatch } from "react-redux";
-// import { saveUserToken } from "../../../actions/TokenAction";
+// import axios from "axios";
+import { login } from "../../../actions/UserActions";
+import { connect, useSelector, useDispatch } from "react-redux";
+import { saveUserToken } from "../../../actions/TokenAction";
 import UserController from '../../../controllers/UserController';
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const BG_IMAGE = require("../../../assets/images/bg_screen.jpg");
-
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -42,7 +41,7 @@ TabSelector.propTypes = {
   selected: PropTypes.bool.isRequired
 };
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -64,24 +63,16 @@ export default class Login extends Component {
 
   componentDidMount() {
     const { userData } = this.state;
-    // this.getToken();
     // const token = await AsyncStorage.getItem('userData');
     let data = this.getToken().then(data => {
-      // console.log("Token: "+ data);
       this.setState({
         userData: data
       });
-      // if (data !== null) {
-      //   console.log("sign in");
-      //   this.props.navigation.navigate("App");
-      // } else {
-      //   console.log("still need to log in");
-      // }
     });
     this.setState({ fontLoaded: true });
     // this.removeItemValue("userData");
   }
-  
+
   async storeToken(user) {
     try {
       // console.log(user);
@@ -120,11 +111,13 @@ export default class Login extends Component {
   login = async () => {
     const { email, password } = this.state;
     this.setState({ isLoading: true });
-    // const token = await this.props.login(email, password);
-    const token = await UserController.login(email, password);
-    console.log(token);
-    if(token != null){
-      UserController.saveUserToken(token);
+    await this.props.login(email, password);
+    //const token = await UserController.login(email, password);
+    // let token = store.getState();
+    
+    if(this.props.user.user != null){
+      this.props.saveUserToken(this.props.user.user);
+      // UserController.saveUserToken(token);
       this.props.navigation.navigate("App");
     }
     setTimeout(() => {
@@ -140,10 +133,9 @@ export default class Login extends Component {
   signUp = async () => {
     const { email, password, passwordConfirmation } = this.state;
     this.setState({ isLoading: true });
-    const token = await UserController.signup(email, password, passwordConfirmation);
+    await UserController.signup(email, password, passwordConfirmation);
     // Simulate an API call
-    console.log(token);
-    if(token != null){
+    if(this.props.user.user != null){
       UserController.saveUserToken(token);
       this.props.navigation.navigate("App");
     }
@@ -354,18 +346,18 @@ export default class Login extends Component {
   }
 }
 
-// const mapStateToProps = state => ({
-//   token:state.token,
-  
-// });
+const mapStateToProps = state => ({
+   user:state.user,
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   // getUserToken: ()=> dispatch(getUserToken()),
-//   login: (email,password) => dispatch(login(email, password)),
-//   saveUserToken: (token) => dispatch(saveUserToken(token))
-// });
+const mapDispatchToProps = dispatch => ({
+  // getUserToken: ()=> dispatch(getUserToken()),
+  login: (email,password) => dispatch(login(email, password)),
+  signup: (email, password, c_password) => dispatch(signup(email, password, c_password)),
+  saveUserToken: (token) => dispatch(saveUserToken(token))
+});
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {
