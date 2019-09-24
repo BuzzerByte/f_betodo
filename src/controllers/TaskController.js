@@ -38,15 +38,18 @@ class TaskController {
                 Authorization: AuthStr
             },
         });
+        
         return data;
     }
 
     delete = async (AuthStr, id) => {
+        
         var data = await axios.delete(this.basePath + '/task/' + id, {
             headers: {
                 Authorization: AuthStr
             },
-        });
+        }); 
+        
         return data;
     }
 }

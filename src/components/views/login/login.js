@@ -17,7 +17,7 @@ import {
 // import AsyncStorage from '@react-native-community/async-storage';
 import { Input, Button, Icon } from "react-native-elements";
 // import axios from "axios";
-import { login } from "../../../actions/UserActions";
+import { login, signup } from "../../../actions/UserActions";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { saveUserToken } from "../../../actions/TokenAction";
 import UserController from '../../../controllers/UserController';
@@ -75,8 +75,9 @@ class Login extends Component {
 
   async storeToken(user) {
     try {
+      this.props.saveUserToken(user);
       // console.log(user);
-      UserController.saveUserToken("userToken",user);
+      // UserController.saveUserToken("userToken",user);
       // await AsyncStorage.setItem("userData", user);
       // console.log("token stored:"+user);
     } catch (error) {
@@ -117,7 +118,6 @@ class Login extends Component {
     
     if(this.props.user.user != null){
       this.props.saveUserToken(this.props.user.user);
-      // UserController.saveUserToken(token);
       this.props.navigation.navigate("App");
     }
     setTimeout(() => {
@@ -133,10 +133,10 @@ class Login extends Component {
   signUp = async () => {
     const { email, password, passwordConfirmation } = this.state;
     this.setState({ isLoading: true });
-    await UserController.signup(email, password, passwordConfirmation);
+    await this.props.signup(email, password, passwordConfirmation);
     // Simulate an API call
     if(this.props.user.user != null){
-      UserController.saveUserToken(token);
+      this.props.saveUserToken(this.props.user.user);
       this.props.navigation.navigate("App");
     }
     setTimeout(() => {

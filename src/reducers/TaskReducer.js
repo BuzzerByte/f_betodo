@@ -5,24 +5,26 @@ const initialState = {
   task: null,
 };
 
-console.log(task);
+// console.log(task);
 
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.ADD_TASK:
-      return {
-        ...state,
-      };
-    case actionTypes.SHOW_TASK:
+    case actionTypes.ADD_TASK_SUCCESS:
       return {
         ...state,
         task: action.task,
       };
-    case actionTypes.DELETE_TASK:
+    case actionTypes.SHOW_TASK_SUCCESS:
       return {
         ...state,
+        task: action.task,
       };
-    case actionTypes.UPDATE_TASK:
+    case actionTypes.DELETE_TASK_SUCCESS:
+      return {
+        ...state,
+        task: action.task,
+      };
+    case actionTypes.UPDATE_TASK_SUCCESS:
       return {
         ...state,
         task: action.task,
