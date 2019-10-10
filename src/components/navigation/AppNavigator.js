@@ -101,7 +101,7 @@ const MainRoot = createDrawerNavigator(
     Payment: {
       path: '/payment',
       screen: Payment,
-    }
+    },
     // Components: {
     //   path: '/components',
     //   screen: Components,
