@@ -4,7 +4,7 @@ import { AsyncStorage } from 'react-native';
 
 class UserController {
     constructor() {
-      this.basePath = 'http://192.168.1.97/api';
+      this.basePath = 'http://178.128.125.2/api';
     }
     // signup = async(email, password, c_password)=>{
     //   axios.post('http://192.168.1.97/api/register', {

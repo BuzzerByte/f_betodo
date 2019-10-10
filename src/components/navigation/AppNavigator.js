@@ -19,6 +19,7 @@ import Pricing from '../drawer/pricing';
 import Login from '../drawer/login';
 import Profile from '../drawer/profile';
 import Lists from '../drawer/lists';
+import Payment from '../drawer/payment';
 import Settings from '../drawer/settings';
 
 // const iconForTab = ({ state }) => {
@@ -97,6 +98,10 @@ const MainRoot = createDrawerNavigator(
       path: '/lists',
       screen: Lists,
     },
+    Payment: {
+      path: '/payment',
+      screen: Payment,
+    }
     // Components: {
     //   path: '/components',
     //   screen: Components,
