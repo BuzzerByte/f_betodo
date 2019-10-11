@@ -18,20 +18,15 @@ import {
   Icon,
   Input
 } from 'react-native-elements';
-import axios from 'axios';
 import { connect, useSelector, useDispatch } from "react-redux";
-import { getUserToken } from "../../../actions/TokenAction";
-import {
-  TextInput
-} from 'react-native-gesture-handler';
 import UserController from '../../../controllers/UserController';
 import TaskController from '../../../controllers/TaskController';
-// import { cacheFonts } from '../../helpers/AssetsCaching';
-
+import { showTask, addTask, deleteTask, updateTask } from "../../../actions/TaskAction";
+import { getUserToken } from "../../../actions/TokenAction";
 const SCREEN_WIDTH = Dimensions.get('window').width;
-// const BEARER_TOKEN = null;
+
 var taskArray = [];
-export default class Tasks extends Component {
+class Tasks extends Component {
   constructor(props) {
     super(props);
     BEARER_TOKEN = this.getToken();
@@ -43,6 +38,9 @@ export default class Tasks extends Component {
       updateTask: '',
     };
     this.getAllTask = this.getAllTask.bind(this);
+    this.onSubmitNewTask = this.onSubmitNewTask.bind(this);
+    this.onSubmitUpdateTask = this.onSubmitUpdateTask.bind(this);
+    this.onDeleteTask = this.onDeleteTask.bind(this);
   }
 
   async getToken() {
@@ -53,77 +51,51 @@ export default class Tasks extends Component {
   }
 
   async componentDidMount() {
-    this.getToken().then((data) => {
-      
-      const AuthStr = "Bearer ".concat(data);
-      TaskController.index(AuthStr).then((response)=>{
-        // console.log(response);
-        taskArray = response.data;
-        //add a property onUpdate, and set that to false
-        taskArray = taskArray.map((data) => {
-          var o = Object.assign({}, data);
-          o.onUpdate = false;
-          return o;
-        });
-        this.setState({
-          tasks: taskArray
-        });
-      });
+    await this.props.getUserToken();
+    await this.props.showTask('Bearer '+this.props.token);
+    // console.log(this.props.task);
+    taskArray = this.props.task.data;
+    taskArray = taskArray.map((data)=>{
+      var o = Object.assign({}, data);
+      o.onUpdate = false;
+      return o;
     });
-
+    this.setState({
+      tasks:taskArray
+    });
+    
     this.setState({
       fontLoaded: true
     });
     // this.removeItemValue('userData');
   }
   
-  getAllTask() {
-    this.getToken().then((data) => {
-      const AuthStr = "Bearer ".concat(data);
-      TaskController.index(AuthStr).then((response)=>{
-        // console.log(response);
-        taskArray = response.data;
-        //add a property onUpdate, and set that to false
-        taskArray = taskArray.map((data) => {
-          var o = Object.assign({}, data);
-          o.onUpdate = false;
-          return o;
-        });
-        this.setState({
-          tasks: taskArray
-        });
-      });
+  async getAllTask() {
+    await this.props.showTask('Bearer '+ this.props.token);
+    taskArray = this.props.task.data;
+    taskArray = taskArray.map((data)=>{
+      var o = Object.assign({}, data);
+      o.onUpdate = false;
+      return o;
     });
-
+    this.setState({
+      tasks:taskArray
+    });
   }
 
-  onSubmitNewTask(newTask) {
-    this.getToken().then((data)=>{
-      const AuthStr = 'Bearer '.concat(data);
-      TaskController.store(AuthStr, newTask).then((response)=>{
-        console.log(response);
-      });
-    });
+  async onSubmitNewTask(newTask) {
+    await this.props.addTask('Bearer '+this.props.token, newTask);
     this.getAllTask();
   }
 
-  onSubmitUpdateTask(updateTask, id) {
-    this.getToken().then((data)=>{
-      const AuthStr = 'Bearer '.concat(data);
-      TaskController.update(AuthStr, updateTask, id).then((response)=>{
-        console.log(response);
-      });
-    });
+  async onSubmitUpdateTask(updateTask, id) {
+    await this.props.updateTask('Bearer '+ this.props.token, updateTask, id);
     this.getAllTask();
   }
 
-  onDeleteTask(id) {
-    this.getToken().then((data)=>{
-      const AuthStr = 'Bearer '.concat(data);
-      TaskController.delete(AuthStr, id).then((response)=>{
-        console.log(response);
-      });
-    });
+  async onDeleteTask(id) {
+    await this.props.deleteTask('Bearer '+ this.props.token, id);
+    console.log(this.props.task);
     this.getAllTask();
   }
 
@@ -325,71 +297,87 @@ export default class Tasks extends Component {
       </View>
     </View>
   );
-}
+  }
 
-renderListCards() {
+  renderListCards() {
 
-  return _.map(this.state.tasks, (task, index) => {
-    return this.renderCard(task, index);
-  });
-}
+    return _.map(this.state.tasks, (task, index) => {
+      return this.renderCard(task, index);
+    });
+  }
 
-render() {
+  render() {
 
-  return ( 
-    <View> 
-    {this.state.fontLoaded ? ( 
-        <SafeAreaView style = {{
-            flex: 1,
-            backgroundColor: 'rgba(241,240,241,1)'
-          }}>
-        <View style = {styles.statusBar}/> 
-        <View style = {styles.navBar}>
-        {/* <Text style = {styles.nameHeader}> Tasks </Text>  */}
-        </View> 
-          <ScrollView style = {{
+    return ( 
+      <View> 
+      {this.state.fontLoaded ? ( 
+          <SafeAreaView style = {{
               flex: 1,
-              marginBottom: 20
+              backgroundColor: 'rgba(241,240,241,1)'
             }}>
+          <View style = {styles.statusBar}/> 
+          <View style = {styles.navBar}>
+          {/* <Text style = {styles.nameHeader}> Tasks </Text>  */}
+          </View> 
+            <ScrollView style = {{
+                flex: 1,
+                marginBottom: 20
+              }}>
 
-          {this.renderListCards()} 
-          </ScrollView> 
-        <View style = {
-          {
-            alignItems: 'center',
-            marginBottom: 16
-          }
-        } >
-        <Input 
-          rightIcon = {
-            <Icon
-            name = "plus"
-            type = "font-awesome"
-            color = "#86939e"
-            size = {25}
-            onPress = {() => this.onSubmitNewTask(this.state.newTask)}
-            />
-          }
-          onChangeText = {(newTask) => this.setState({newTask})}
-          leftIconContainerStyle = {{
-              marginLeft: 0,
-              marginRight: 10
-          }}
-          // containerStyle = {
-          //   styles.inputContainerStyle
-          // }
-          placeholder = "New task" />
-        </View> 
-        </SafeAreaView>
+            {this.renderListCards()} 
+            </ScrollView> 
+          <View style = {
+            {
+              alignItems: 'center',
+              marginBottom: 16
+            }
+          } >
+          <Input 
+            rightIcon = {
+              <Icon
+              name = "plus"
+              type = "font-awesome"
+              color = "#86939e"
+              size = {25}
+              onPress = {() => this.onSubmitNewTask(this.state.newTask)}
+              />
+            }
+            onChangeText = {(newTask) => this.setState({newTask})}
+            leftIconContainerStyle = {{
+                marginLeft: 0,
+                marginRight: 10
+            }}
+            // containerStyle = {
+            //   styles.inputContainerStyle
+            // }
+            placeholder = "New task" />
+          </View> 
+          </SafeAreaView>
 
-      ) : ( 
-        <Text> Loading... </Text>
-      )
-    } 
-    </View>
-  );
+        ) : ( 
+          <Text> Loading... </Text>
+        )
+      } 
+      </View>
+    );
+  }
 }
-}
+
+const mapStateToProps = state => ({ 
+   user:state.user,
+   task:state.task.task,
+   token: state.token.token,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addTask: (token, text) => dispatch(addTask(token, text)),
+  deleteTask: (token, id) => dispatch(deleteTask(token, id)),
+  updateTask: (token, text, id) => dispatch(updateTask(token, text, id)),
+  showTask: (token) => dispatch(showTask(token)),
+  getUserToken: () => dispatch(getUserToken())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
 
 const styles = StyleSheet.create({
   statusBar: {

@@ -36,7 +36,7 @@ const App = () => {
       setReady(true);
     });
   });
-  
+    
   const loading = (
     <View style={styles.container}>
       <ActivityIndicator />
