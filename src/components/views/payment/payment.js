@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import QueryString from 'query-string';
+import Alipay from '@0x5e/react-native-alipay';
 
 import React, {
   Component
@@ -20,15 +22,13 @@ import {
 } from 'react-native-elements';
 import { connect, useSelector, useDispatch } from "react-redux";
 import UserController from '../../../controllers/UserController';
-import TaskController from '../../../controllers/TaskController';
-import { showTask, addTask, deleteTask, updateTask } from "../../../actions/TaskAction";
 import { getUserToken } from "../../../actions/TokenAction";
+import { auth, pay } from "../../../actions/PaymentAction";
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-var taskArray = [];
 class Payment extends Component {
   constructor(props) {
-
+    super(props);
   }
 
   async componentDidMount() {
@@ -39,27 +39,31 @@ class Payment extends Component {
 
     return ( 
       <View> 
-        
+        <SafeAreaView style = {{
+              flex: 1,
+              backgroundColor: 'rgba(241,240,241,1)'
+            }}>
+        <View style = {styles.statusBar}/> 
+        <View style = {styles.navBar}></View>
+
+        </SafeAreaView>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({ 
-   user:state.user,
-   task:state.task.task,
-   token: state.token.token,
+  user:state.user,
+  token: state.token.token,
+  alipay: state.alipay,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addTask: (token, text) => dispatch(addTask(token, text)),
-  deleteTask: (token, id) => dispatch(deleteTask(token, id)),
-  updateTask: (token, text, id) => dispatch(updateTask(token, text, id)),
-  showTask: (token) => dispatch(showTask(token)),
-  getUserToken: () => dispatch(getUserToken())
+  auth: () => dispatch(auth()),
+  pay: () => dispatch(pay()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
+export default connect(mapStateToProps, mapDispatchToProps)(Payment);
 
 const styles = StyleSheet.create({
   statusBar: {
