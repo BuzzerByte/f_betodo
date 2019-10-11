@@ -167,8 +167,8 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            // signingConfig signingConfigs.debug
-            signingConfig signingConfigs.release    
+            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.release    
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -202,7 +202,9 @@ dependencies {
     implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    //alipay
+    compile (name: 'alipaySdk-15.6.5-20190718211148', ext: 'aar')
+    ////////
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
       debugImplementation files(hermesPath + "hermes-debug.aar")
