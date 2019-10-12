@@ -17,6 +17,7 @@ import {
 // import AsyncStorage from '@react-native-community/async-storage';
 import { Input, Button, Icon } from "react-native-elements";
 // import axios from "axios";
+import Colors from '../../../helpers/Colors';
 import { login, signup } from "../../../actions/UserActions";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { saveUserToken } from "../../../actions/TokenAction";
@@ -361,7 +362,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   rowSelector: {
     height: 20,
@@ -414,7 +415,7 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "white"
+    color: "black"
   },
   bgImage: {
     flex: 1,
