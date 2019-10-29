@@ -13,12 +13,12 @@ const authRequest = () => ({
   type: actionTypes.AUTH_REQUEST,
 });
 
-const authError = error => ({
+const authError = alipay => ({
   type: actionTypes.AUTH_ERROR,
   error,
 });
 
-const authSuccess = auth => ({
+const authSuccess = alipay => ({
   type: actionTypes.AUTH_SUCCESS,
   alipay,
 });
@@ -27,30 +27,30 @@ const aliPayRequest = () => ({
   type: actionTypes.ALI_PAY_REQUEST,
 });
 
-const aliPayError = error => ({
+const aliPayError = alipay => ({
   type: actionTypes.ALI_PAY_ERROR,
 });
 
-const aliPaySuccess = auth => ({
+const aliPaySuccess = alipay => ({
   type: actionTypes.ALI_PAY_SUCCESS,
   alipay,
 });
 
-export const auth = (email, password, c_password) => async(dispatch)=>{
+export const auth = () => async(dispatch)=>{
   dispatch(authRequest());
   try{
-    const alipay = await PaymentController.auth(email, password, c_password);
+    const alipay = await PaymentController.auth();
     dispatch(authSuccess(alipay));
   }catch(error){
     dispatch(authError(error));
   }
 };
 
-export const pay = (email, password) => async(dispatch) => {
+export const pay = () => async(dispatch) => {
   dispatch(aliPayRequest());
   try {
-    const alipay = await PaymentController.pay(email, password);
-    // console.log(user);
+    const alipay = await PaymentController.pay();
+    console.log(alipay);
     dispatch(aliPaySuccess(alipay));
   } catch (error) {
     dispatch(aliPayError(error.message));

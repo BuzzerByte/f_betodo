@@ -29,10 +29,19 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class Payment extends Component {
   constructor(props) {
     super(props);
+    this.onAlipay = this.onAlipay.bind(this);
   }
 
   async componentDidMount() {
-   
+    this.onAlipay();
+  }
+
+  
+  async onAlipay(){
+    while(1){
+      await this.props.pay();
+      console.log(this.props.alipay);
+    }
   }
 
   render() {
@@ -45,7 +54,13 @@ class Payment extends Component {
             }}>
         <View style = {styles.statusBar}/> 
         <View style = {styles.navBar}></View>
-
+        <View style={{ alignItems: 'center' }}>
+            <Button
+              title={`Alipay\nSimulation`}
+              containerStyle={{ marginVertical: 10 }}
+              onPress = {()=>this.onAlipay()} 
+            />
+        </View>
         </SafeAreaView>
       </View>
     );
