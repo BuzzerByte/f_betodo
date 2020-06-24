@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Image, Dimensions } from 'react-native';
 import {
   createStackNavigator,
-  createBottomTabNavigator,
-  createDrawerNavigator,
   DrawerItems,
-} from 'react-navigation';
+} from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 const WINDOW_WIDTH = Dimensions.get('window').width;
 // import Profile from '../Profile';
 import Home from '../Home';
@@ -19,7 +19,6 @@ import Pricing from '../drawer/pricing';
 import Login from '../drawer/login';
 import Profile from '../drawer/profile';
 import Lists from '../drawer/lists';
-import Payment from '../drawer/payment';
 import Settings from '../drawer/settings';
 
 // const iconForTab = ({ state }) => {
@@ -97,10 +96,6 @@ const MainRoot = createDrawerNavigator(
     Lists: {
       path: '/lists',
       screen: Lists,
-    },
-    Payment: {
-      path: '/payment',
-      screen: Payment,
     },
     // Components: {
     //   path: '/components',

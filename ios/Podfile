@@ -30,6 +30,8 @@ target 'BeTodo' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
   target 'BeTodoTests' do
     inherit! :search_paths
     # Pods for testing

@@ -4,15 +4,13 @@ import user from './UserReducer';
 import status from './StatusReducer';
 import task from './TaskReducer';
 import token from './TokenReducer';
-import alipay from './PaymentReducer';
 
 const rootReducer = combineReducers({
   error,
   user,
   status,
   task,
-  token,
-  alipay,
+  token
 });
 
 export default rootReducer;
