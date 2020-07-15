@@ -1,6 +1,6 @@
 import httpClient from './HttpClient';
 import axios from 'axios';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class UserController {
     constructor() {

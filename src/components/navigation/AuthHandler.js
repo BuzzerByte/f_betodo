@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, AsyncStorage } from "react-native";
+import { View, StyleSheet } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import getUser from "../../selectors/UserSelectors";
